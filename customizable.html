@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cash-Flow & Entrepreneurship Planner</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#17212b;--muted:#5b6875;--line:#dce2e8;--accent:#245b8f;--bad:#a52b35;--good:#176b45}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:auto;padding:22px}h1{font-size:1.7rem;margin:.2rem 0}h2{font-size:1.15rem;margin:.1rem 0 .6rem}p{color:var(--muted);margin:.3rem 0 1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.field{margin:12px 0}.field label{display:flex;justify-content:space-between;gap:12px;font-weight:600}.field input[type=range]{width:100%;accent-color:var(--accent)}input[type=number],input[type=text],select{font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;width:100%;background:#fff;color:var(--ink)}
+.inline{display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center}.check{display:flex;gap:9px;align-items:center;margin:10px 0}.check input{width:18px;height:18px}
+.kpi{background:#f7f9fb;border:1px solid var(--line);border-radius:10px;padding:12px}.kpi small{display:block;color:var(--muted)}.kpi strong{font-size:1.4rem;display:block}.negative{color:var(--bad)}.positive{color:var(--good)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}td:last-child,th:last-child{text-align:right}.actions{display:flex;gap:10px;flex-wrap:wrap}button{font:inherit;border:0;border-radius:9px;background:var(--accent);color:#fff;padding:10px 14px;cursor:pointer}button.secondary{background:#e7edf3;color:var(--ink)}.note{font-size:.9rem;color:var(--muted)}.mission{white-space:pre-line}
+@media print{body{background:#fff}.actions,.field input[type=range],button{display:none}.card{break-inside:avoid}}
+</style></head>
+<body><main>
+<header><h1>Cash-Flow & Entrepreneurship Planner</h1><p>Editable monthly scenarios. This file runs locally in your browser; no account or internet connection is required after saving.</p></header>
+<section class="card"><h2>Customize variable names</h2><p>Rename the labels used in this planner for other projects or business models. These are display labels; calculations remain attached to their corresponding input.</p>
+<div class="grid">
+<div class="field"><label for="labelIncome">Income label</label><input id="labelIncome" type="text" value="Reliable monthly income"></div>
+<div class="field"><label for="labelDaily">Daily extra label</label><input id="labelDaily" type="text" value="Extra cash earned per day"></div>
+<div class="field"><label for="labelTrading">Bonus label</label><input id="labelTrading" type="text" value="Trading bonus actually withdrawn"></div>
+<div class="field"><label for="labelHotel">Hotel / fixed cost label</label><input id="labelHotel" type="text" value="Hotel"></div>
+<div class="field"><label for="labelFood">Daily spending label</label><input id="labelFood" type="text" value="Food spending per day"></div>
+<div class="field"><label for="labelTransit">Weekly variable cost label</label><input id="labelTransit" type="text" value="Transportation per week"></div>
+<div class="field"><label for="labelBills">Recurring costs label</label><input id="labelBills" type="text" value="Active recurring bills per month"></div>
+</div></section>
+<section class="card"><h2>Income assumptions</h2>
+<div class="grid">
+<div class="field"><label for="income">Reliable monthly income <span id="incomeOut"></span></label><input id="income" type="range" min="0" max="6000" step="50" value="900"></div>
+<div class="field"><label for="dailyExtra">Extra cash earned per day <span id="dailyExtraOut"></span></label><input id="dailyExtra" type="range" min="0" max="100" step="1" value="0"></div>
+<div class="field"><label for="extra450">Possible additional payment</label><select id="extra450"><option value="0">Not received / don't count it</option><option value="450" selected>$450 payment received</option><option value="900">$900 payment received</option></select></div>
+<div class="field"><label for="trading">Trading bonus actually withdrawn</label><select id="trading"><option value="0" selected>$0</option><option value="1000">$1,000</option><option value="2000">$2,000</option><option value="other">Custom amount</option></select><input id="tradingCustom" type="number" min="0" step="50" value="1500" style="display:none;margin-top:7px"></div>
+</div></section>
+<section class="card"><h2>Living costs and recurring bills</h2>
+<div class="grid">
+<div class="field"><label for="weekdays">Weekday hotel rate <span id="weekdaysOut"></span></label><input id="weekdays" type="range" min="0" max="300" step="5" value="170"></div>
+<div class="field"><label for="weekends">Weekend hotel rate <span id="weekendsOut"></span></label><input id="weekends" type="range" min="0" max="400" step="5" value="270"></div>
+<div class="field"><label for="food">Food spending per day <span id="foodOut"></span></label><input id="food" type="range" min="0" max="60" step="1" value="15"></div>
+<div class="field"><label for="transit">Transportation per week <span id="transitOut"></span></label><input id="transit" type="range" min="0" max="150" step="2" value="34"></div>
+<div class="field"><label for="bills">Active recurring bills per month <span id="billsOut"></span></label><input id="bills" type="range" min="0" max="1000" step="5" value="264"></div>
+<div class="field"><label for="days">Planning days</label><input id="days" type="number" min="1" max="31" value="31"></div>
+<div class="field"><label for="weekdaysCount">Weekdays in month</label><input id="weekdaysCount" type="number" min="0" max="31" value="22"></div>
+<div class="field"><label for="weekendsCount">Weekend days in month</label><input id="weekendsCount" type="number" min="0" max="31" value="9"></div>
+</div>
+<div class="check"><input id="applecare" type="checkbox"><label for="applecare">Include inactive AppleCare+ ($16)</label></div>
+<div class="check"><input id="runescape" type="checkbox"><label for="runescape">Include inactive RuneScape membership ($20)</label></div>
+<div class="check"><input id="crunchyroll" type="checkbox"><label for="crunchyroll">Include inactive Crunchyroll ($10)</label></div>
+<div class="check"><input id="gptInactive" type="checkbox"><label for="gptInactive">GPT+ is inactive (subtract $20 from active bills)</label></div>
+</section>
+<section class="card"><h2>Scenario results</h2><div class="grid">
+<div class="kpi"><small>Total scenario income</small><strong id="totalIncome">$0</strong></div>
+<div class="kpi"><small>Estimated monthly costs</small><strong id="totalCosts">$0</strong></div>
+<div class="kpi"><small>Projected balance</small><strong id="balance">$0</strong></div>
+<div class="kpi"><small>Hotel share of costs</small><strong id="hotelShare">0%</strong></div>
+</div>
+<table style="margin-top:12px"><thead><tr><th>Cost category</th><th>Monthly estimate</th></tr></thead><tbody id="costRows"></tbody></table>
+<p id="interpretation"></p></section>
+<section class="card"><h2>Bill calendar</h2><table><thead><tr><th>Due date</th><th>Bill</th><th>Amount</th><th>Planning note</th></tr></thead><tbody id="billRows"></tbody></table>
+<p class="note">Dates and amounts are editable in the customizable version. The current list is based on the amounts supplied; confirm whether U-Haul is recurring and whether inactive subscriptions are still billing.</p></section>
+<section class="card"><h2>Entrepreneurship savings mission</h2><div class="mission" id="mission">Build, don't bleed.\n\nMy objective is to turn money, creativity, and technical knowledge into sustainable independence. I will keep essential living costs separate from trading capital and project budgets. I will create before purchasing, reward completed work rather than impulse, preserve realized profits, and review spending weekly. My goal is to build useful software, creative work, intellectual property, and repeatable value without making survival depend on speculative gains.</div></section>
+<section class="card"><h2>Export and reset</h2><div class="actions"><button id="downloadCsv">Export results as CSV</button><button id="downloadJson" class="secondary">Export settings as JSON</button><button id="print" class="secondary">Print / save as PDF</button><button id="reset" class="secondary">Reset defaults</button></div><p class="note">The scenario uses a 31-day month, 22 weekdays, 9 weekend days, and transportation converted using 52 weeks ÷ 12 months. It excludes taxes, debt payments, laundry, fees, and other unlisted costs. Trading gains are counted only if actually withdrawn to cash.</p></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+const number=id=>Math.max(0,Number($(id).value)||0);
+const defaults={income:900,dailyExtra:0,extra450:'450',trading:'0',tradingCustom:1500,weekdays:170,weekends:270,food:15,transit:34,bills:264,days:31,weekdaysCount:22,weekendsCount:9,applecare:false,runescape:false,crunchyroll:false,gptInactive:false};
+function current(){let trading=$('trading').value==='other'?number('tradingCustom'):Number($('trading').value);let inactive=( $('applecare').checked?16:0)+($('runescape').checked?20:0)+($('crunchyroll').checked?10:0);let bills=number('bills')-( $('gptInactive').checked?20:0)+inactive;let days=number('days'),wd=number('weekdaysCount'),we=number('weekendsCount');let hotel=wd*number('weekdays')+we*number('weekends');let food=days*number('food');let transit=number('transit')*52/12;let costs=hotel+food+transit+bills;let income=number('income')+number('dailyExtra')*days+Number($('extra450').value)+trading;return {income,hotel,food,transit,bills,costs,balance:income-costs,hotelShare:costs?hotel/costs*100:0,days,wd,we,trading};}
+function render(){let v=current();for(let [id,src] of [['incomeOut','income'],['dailyExtraOut','dailyExtra'],['weekdaysOut','weekdays'],['weekendsOut','weekends'],['foodOut','food'],['transitOut','transit'],['billsOut','bills']])$(id).textContent=money(number(src));$('tradingCustom').style.display=$('trading').value==='other'?'block':'none';$('totalIncome').textContent=money(v.income);$('totalCosts').textContent=money(v.costs);$('balance').textContent=money(v.balance);$('balance').className=v.balance<0?'negative':'positive';$('hotelShare').textContent=v.hotelShare.toFixed(1)+'%';$('costRows').innerHTML=[['Hotel',v.hotel],['Food',v.food],['Transportation',v.transit],['Bills and subscriptions',v.bills]].map(r=>`<tr><td>${r[0]}</td><td>${money(r[1])}</td></tr>`).join('');$('interpretation').textContent=v.balance<0?'Shortfall: protect essentials, reduce fixed costs, and avoid relying on trading to cover bills.': 'Projected surplus before unlisted costs, savings, and taxes. Assign the surplus intentionally.';const bills=[['ASAP','GPT+','$20','Verify status'],['Oct 20','AMC A-List','$31','Optional entertainment'],['Oct 21','U-Haul','$60','Verify recurring status'],['Nov 3','T-Mobile','$97','Phone service'],['Nov 17','Amazon','$16','Membership'],['Jan 6','Apple One','$40','Review renewal']];$('billRows').innerHTML=bills.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');}
+function download(name,content,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href);}
+function settings(){let s={};Object.keys(defaults).forEach(k=>{s[k]=(['applecare','runescape','crunchyroll','gptInactive'].includes(k))?$(k).checked:$(k).value});return s;}
+function csv(){let v=current();return [['Metric','Value'],['Income',v.income],['Hotel',v.hotel],['Food',v.food],['Transportation',v.transit],['Bills and subscriptions',v.bills],['Total costs',v.costs],['Projected balance',v.balance],['Hotel share percent',v.hotelShare]].map(r=>r.join(',')).join('\\n');}
+function customLabel(labelId, inputId, outputId){
+ const el=$(inputId); const parent=el.closest('.field'); if(!parent)return;
+ const label=parent.querySelector('label'); if(!label)return;
+ label.innerHTML='';
+ label.append(document.createTextNode($(labelId).value||labelId+' '));
+ const span=document.createElement('span'); span.id=outputId; label.appendChild(span);
+}
+function refreshCustomLabels(){
+ customLabel('labelIncome','income','incomeOut');
+ customLabel('labelDaily','dailyExtra','dailyExtraOut');
+ customLabel('labelHotel','weekdays','weekdaysOut');
+ customLabel('labelFood','food','foodOut');
+ customLabel('labelTransit','transit','transitOut');
+ customLabel('labelBills','bills','billsOut');
+ const tradingLabel=$('trading').closest('.field').querySelector('label'); tradingLabel.textContent=$('labelTrading').value||'Bonus label';
+}
+['labelIncome','labelDaily','labelTrading','labelHotel','labelFood','labelTransit','labelBills'].forEach(id=>$(id).addEventListener('input',()=>{refreshCustomLabels();render()}));
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',render));
+$('downloadCsv').onclick=()=>download('cash-flow-results.csv',csv(),'text/csv');
+$('downloadJson').onclick=()=>download('cash-flow-settings.json',JSON.stringify(settings(),null,2),'application/json');
+$('print').onclick=()=>window.print();
+$('reset').onclick=()=>{Object.entries(defaults).forEach(([k,v])=>{if(['applecare','runescape','crunchyroll','gptInactive'].includes(k))$(k).checked=v;else $(k).value=v});render()};
+render();
+</script></body></html>
